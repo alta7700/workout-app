@@ -1,11 +1,7 @@
 from fastapi import APIRouter
-from starlette import status
-from starlette.websockets import WebSocket
+from starlette.websockets import WebSocket, WebSocketDisconnect
 
-from core.redis_client import RedisManager
-from schemas import StudentRead
-from services import users as users_service
-from services import workouts as workouts_service
+from services.workouts import WorkoutChannel
 
 
 wo_ws_router = APIRouter()
@@ -13,58 +9,50 @@ wo_ws_router = APIRouter()
 
 @wo_ws_router.websocket('/{subject_id}')
 async def run_teacher_ws(websocket: WebSocket, subject_id: int):
-    await websocket.accept()
-    token = await websocket.receive_text()
-    can, code, reason, teacher = await users_service.can_user_accept_workouts(token=token, subject_id=subject_id)
-    if not can:
-        return await websocket.close(code=code, reason=reason)
-    async for action in websocket.iter_json():
-        match action:
-            case {'type': 'create'}:
-                await websocket.send_json({
-                    'type': 'created',
-                    'data': await RedisManager.start_wo(subject_id, teacher.id)
-                })
-            case {'type': 'check', 'random_key': random_key}:
-                student_id = await RedisManager.check_wo(subject_id, teacher.id, random_key)
-                if student_id and (student := await users_service.get_user_by_id(user_id=student_id)):
-                    await websocket.send_json({
-                        'type': 'checked',
-                        'data': StudentRead.from_orm(student)
-                    })
-                else:
-                    await websocket.send_json({
-                        'type': 'checked',
-                        'data': None
-                    })
-            case {'type': 'commit', 'random_key': random_key}:
-                if wo_create := await RedisManager.commit_wo(subject_id, teacher.id, random_key):
-                    await workouts_service.create_workout(wo_create)
-                    await r
-                    await websocket.send_json({
-                        'type': 'committed',
-                        'data': wo_create.dict()
-                    })
-                else:
+    chanel = await WorkoutChannel.connect_teacher(websocket, subject_id)
+    if not chanel:
+        return
+    try:
+        while True:
+            match await chanel.teacher_ws.receive_json():
+                case {'type': 'start'}:
+                    await chanel.start_wo()
+                case {'type': 'commit', 'randomKey': random_key}:
+                    if random_key == chanel.random_key:
+                        await chanel.commit_wo()
+                    else:
+                        await chanel.send_teacher({'type': 'error', 'data': 'Произошла ошибка, попробуйте заново'})
+                case {'type': 'cancel'}:
+                    await chanel.cancel_wo()
+                case {'type': 'close me'}:
+                    await chanel.close()
+                    return
+                case _:
                     await websocket.send_json({
                         'type': 'error',
-                        'data': 'Произошла ошибка, попробуйте заново'
+                        'data': 'Неизвестная команда'
                     })
-            case _:
-                await websocket.send_json({
-                    'type': 'error',
-                    'data': 'Неизвестная команда'
-                })
+    except WebSocketDisconnect:
+        await chanel.close()
 
 
-@wo_ws_router.websocket('/{subject_id}/{teacher_id}/{random_key}')
-async def run_student_ws(websocket: WebSocket, subject_id: int, teacher_id: int, random_key: str):
-    await websocket.accept()
-    token = await websocket.receive_text()
-    can, code, reason, student = await users_service.can_user_workout(token=token, subject_id=subject_id)
-    if not can:
-        return await websocket.close(code=code, reason=reason)
-    ok = await RedisManager.set_student_wo(subject_id, teacher_id, random_key, student.id)
-    if not ok:
-        await websocket.close(code=status.WS_1013_TRY_AGAIN_LATER, reason='Произошла ошибка, попробуйте заново')
-    await RedisManager.wait_for_commit_message(random_key)
+@wo_ws_router.websocket('/{random_key}')
+async def run_student_ws(websocket: WebSocket, random_key: str):
+    chanel = await WorkoutChannel.connect_student(websocket, random_key)
+    if not chanel:
+        return
+    await chanel.send_student_info_to_teacher()
+    try:
+        while True:
+            match await chanel.teacher_ws.receive_json():
+                case {'type': 'close me'}:
+                    await chanel.disconnect_student()
+                    return
+                case _:
+                    await websocket.send_json({
+                        'type': 'error',
+                        'data': 'Неизвестная команда'
+                    })
+    except WebSocketDisconnect:
+        await chanel.disconnect_student()
+

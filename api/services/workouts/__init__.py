@@ -1,1 +1,2 @@
-from .redis_manager import WORedisManager
+from .workouts import *
+from .chanels import WorkoutChannel
