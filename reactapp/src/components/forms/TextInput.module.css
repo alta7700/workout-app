@@ -1,0 +1,28 @@
+.field {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.label {
+    width: 100%;
+}
+
+.input {
+    max-width: 320px;
+    height: 50px;
+    width: 100%;
+    border-radius: 8px;
+    outline: none;
+}
+.valid {
+    border-color: green;
+}
+.invalid {
+    border-color: red;
+}
+
+.errors {
+
+}
