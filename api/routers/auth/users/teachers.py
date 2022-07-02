@@ -6,12 +6,12 @@ from exceptions import UsernameExists, BadRequest
 from models import User
 from services import users as users_service
 from dependencies import auth as auth_deps
-from schemas import TeacherRead, TeacherCreate, TSBindCreate, StudHierarchy
+from schemas import TeacherCreate, TSBindCreate, StudHierarchy
 
 teachers_router = APIRouter()
 
 
-@teachers_router.post('/create', response_model=TeacherRead, status_code=status.HTTP_201_CREATED)
+@teachers_router.post('/create', status_code=status.HTTP_201_CREATED)
 async def create(
         data: TeacherCreate,
         admin: User = Depends(auth_deps.get_admin, use_cache=False)
@@ -22,7 +22,6 @@ async def create(
         await db_user.save()
     except IntegrityError:
         raise UsernameExists()
-    return TeacherRead.from_orm(db_user)
 
 
 @teachers_router.post('/bind', response_model=StudHierarchy)

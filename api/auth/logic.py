@@ -2,6 +2,7 @@ from tortoise import timezone
 
 from exceptions import InvalidJWTToken
 from models import User
+from schemas import UserMeRead
 from .config import pwd_context, JWTConfig, Token, TokenUser, TokenTypes, TokenPair
 from jose import jwt, JWTError
 
@@ -44,4 +45,4 @@ def get_token_pair(user: User) -> TokenPair:
     access_token = create_token(access)
     refresh_token = create_token(refresh)
 
-    return TokenPair(access_token=access_token, refresh_token=refresh_token)
+    return TokenPair(access_token=access_token, refresh_token=refresh_token, user=UserMeRead.from_orm(user))

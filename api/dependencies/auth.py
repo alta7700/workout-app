@@ -22,13 +22,13 @@ async def get_auth(token: str = Header(alias='Token')) -> TokenUser:
     return payload.user
 
 
-async def get_admin(user: TokenUser = Depends(get_auth)):
+async def get_admin(user: TokenUser = Depends(get_auth)) -> TokenUser:
     if not user.is_superuser:
         raise PermissionDenied('администратора')
     return user
 
 
-async def get_teacher(user: TokenUser = Depends(get_auth)):
+async def get_teacher(user: TokenUser = Depends(get_auth)) -> TokenUser:
     if not user.is_teacher:
         raise PermissionDenied('преподавателя')
     return user

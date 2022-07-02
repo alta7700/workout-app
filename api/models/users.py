@@ -43,7 +43,8 @@ class User(Model):
 
     @classmethod
     def filter_students(cls) -> QuerySet[MODEL]:
-        return cls.filter(is_teacher=False, is_superuser=False)
+        return cls.filter(is_superuser=False, is_teacher=False, is_active=True)\
+            .order_by('faculty_id', 'course_n', 'group_n', 'first_name', 'last_name')
 
     @classmethod
     def filter_teachers(cls) -> QuerySet[MODEL]:

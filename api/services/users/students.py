@@ -7,14 +7,14 @@ from services.users import can_use_ws
 
 
 async def get_students_list(faculty_id: int = None, course_n: int = None, group_n: int = None) -> list[User]:
-    query = User.filter(is_superuser=False, is_teacher=False, is_active=True)
+    query = User.filter_students()
     if faculty_id:
         query = query.filter(faculty_id=faculty_id)
     if course_n:
         query = query.filter(course_n=course_n)
     if group_n:
         query = query.filter(group_n=group_n)
-    return await query.order_by('faculty_id', 'course_n', 'group_n', 'first_name', 'last_name')
+    return await query
 
 
 async def get_teacher_students(subject_id: int, teacher_id: int) -> list[User]:
@@ -37,7 +37,6 @@ def get_students_tree(
             if not (gr_list := c.get(s.group_n)):
                 gr_list = c[s.group_n] = []
         gr_list.append(StudentRead.from_orm(s))
-    print(d)
     return d
 
 

@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional
 
 from pydantic import Field, validator
 
@@ -12,6 +12,21 @@ class BaseUser(CamelModel):
     last_name: str = Field(max_length=UserSettings.MAX_LAST_NAME_LEN)
     fathers_name: str = Field(default='', max_length=UserSettings.MAX_FATHERS_NAME_LEN)
     username: str = Field(min_length=5, max_length=UserSettings.MAX_USERNAME_NAME_LEN)
+
+
+class UserMeRead(BaseUser):
+
+    id: int
+    is_active: bool
+    is_teacher: bool
+    is_superuser: bool
+    faculty_id: Optional[int]
+    group_n: Optional[int]
+    course_n: Optional[int]
+    is_head: Optional[bool]
+
+    class Config(BaseUser.Config):
+        orm_mode = True
 
 
 class UserCreateMixin(CamelModel):
@@ -38,4 +53,3 @@ class UserCreateMixin(CamelModel):
             if v != pw:
                 raise ValueError("Пароли не совпадают")
         return v
-

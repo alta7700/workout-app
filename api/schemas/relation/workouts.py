@@ -1,10 +1,10 @@
 from datetime import datetime
 
-from schemas import ORMCamelModel, CamelModel, TeacherRead, StudentRead
+from schemas import ORMCamelModel, TeacherRead, StudentRead
 
 
 class AcceptedWorkOutRead(ORMCamelModel):
-    """Нет преподавателей, потому что это список принятых данным преподавателем отработок"""
+    # Нет преподавателей, потому что это список принятых данным преподавателем отработок
 
     id: int
     subject_id: int
@@ -13,7 +13,6 @@ class AcceptedWorkOutRead(ORMCamelModel):
 
 
 class WorkOutRead(ORMCamelModel):
-    """Нет преподавателей, потому что это список принятых данным преподавателем отработок"""
 
     id: int
     subject_id: int

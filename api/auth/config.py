@@ -6,6 +6,7 @@ from jose.constants import ALGORITHMS
 from passlib.context import CryptContext
 from tortoise import timezone
 
+from schemas import UserMeRead
 from schemas.base import CamelModel
 from settings import SECRET
 
@@ -25,15 +26,11 @@ class JWTConfig:
 
 
 class TokenUser(CamelModel):
+
     id: int
     username: str
     is_teacher: bool
     is_superuser: bool
-
-    faculty_id: Optional[str]
-    course_n: Optional[str]
-    group_n: Optional[str]
-    is_head: Optional[bool]
 
     class Config(CamelModel.Config):
         orm_mode = True
@@ -57,6 +54,7 @@ class AuthModel(CamelModel):
 class TokenPair(CamelModel):
     access_token: str
     refresh_token: str
+    user: UserMeRead
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

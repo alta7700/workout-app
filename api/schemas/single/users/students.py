@@ -8,7 +8,6 @@ class BaseStudent(BaseUser):
     faculty_id: int
     course_n: int
     group_n: int
-    is_head: bool
 
 
 class StudentCreate(BaseStudent, UserCreateMixin):
@@ -18,8 +17,7 @@ class StudentCreate(BaseStudent, UserCreateMixin):
 class StudentRead(BaseStudent):
     id: int
     is_active: bool
-    is_teacher: bool = False
-    is_superuser: bool = False
+    is_head: bool
     last_login: Optional[datetime]
 
     class Config(BaseStudent.Config):

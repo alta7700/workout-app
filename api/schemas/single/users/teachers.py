@@ -15,7 +15,6 @@ class TeacherCreate(BaseTeacher, UserCreateMixin):
 class TeacherRead(BaseTeacher):
     id: int
     is_active: bool
-    is_teacher: bool = True
     last_login: Optional[datetime]
 
     class Config(BaseTeacher.Config):
