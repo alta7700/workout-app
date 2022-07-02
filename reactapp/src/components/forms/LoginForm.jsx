@@ -26,13 +26,14 @@ const LoginForm = () => {
                 <TextInput
                     register={register("password",  {
                         required: 'Обязательное поле',
-                        minLength: {value: 8, message: 'Минимальная длина - 8 символов'},
+                        minLength: {value: 8, message: 'Минимум 8 символов'},
+                        maxLength: {value: 25, message: 'Максимум 25 символов'},
                         validate: {
                             digit: v => /(?=.*[0-9])/.test(v) || "Минимум одна цифра",
                             lower: v => /(?=.*[a-z])/.test(v) || "Нужна одна прописная буква",
                             upper: v => /(?=.*[A-Z])/.test(v) || "Нужна одна строчная буква",
-                            allowed: v => /^[0-9a-zA-Z!@#$%^&*]{8,}$/.test(v) ||
-                                "Разрешены только латинские буквы, цифры и символы !@#$%^&*",
+                            allowed: v => /^[0-9a-zA-Z!@#$%^&*]{0,}$/.test(v) ||
+                                "Только латинские буквы, цифры и символы !@#$%^&*",
                         }
                     })}
                     errors={errors.password}

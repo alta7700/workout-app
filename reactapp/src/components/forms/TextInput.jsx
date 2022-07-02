@@ -11,8 +11,8 @@ const TextInput = ({ register, errors, dirty, label, ...props}) => {
                 className={classes.input}
                 placeholder={label}
             />
-            {errors?.types.map(er =>
-
+            {errors && Object.entries(errors.types).map(([type, message]) =>
+                <p key={type}>{message}</p>
             )}
         </div>
     );
