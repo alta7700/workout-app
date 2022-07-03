@@ -1,19 +1,30 @@
-import React from 'react';
+import React, {useState} from 'react';
 import classes from "./TextInput.module.css";
+import errorSvg from "./error.svg"
+import successSvg from "./success.svg"
 
-const TextInput = ({ register, errors, dirty, label, ...props}) => {
+const TextInput = ({ register, errors, label, children, ...props}) => {
+
+    const [showErrors, setShowErrors] = useState(false)
 
     return (
-        <div className={classes.field}>
+        <div className={classes.container}>
             <input
                 {...register}
                 {...props}
                 className={classes.input}
-                placeholder={label}
+                placeholder={' '}
             />
-            {errors && Object.entries(errors.types).map(([type, message]) =>
-                <p key={type}>{message}</p>
-            )}
+            <label className={classes.label}>{label}</label>
+            <div className={classes.errors} onClick={() => setShowErrors(prevState => !prevState)}>
+                {showErrors && errors && <div className={classes.dialog}>
+                    {Object.entries(errors.types).map(([type, message]) =>
+                        <p key={type}>*{message}</p>
+                    )}
+                </div>}
+                {errors ? <img src={errorSvg} alt="Ошибка"/> : <img src={successSvg} alt="Правильно"/>}
+            </div>
+            {children} {/* например для глазика */}
         </div>
     );
 };

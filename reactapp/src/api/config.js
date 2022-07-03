@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const HOST = "192.168.0.111:8000"
+const HOST = "192.168.0.102:8000"
 
 
 export const HTTP_ADDRESS = `http://${HOST}`

@@ -11,7 +11,7 @@ export default class AuthService {
     }
 
     static async refresh(refreshToken) {
-        return api.post(`${this.authUrl}/refresh`, {refreshToken})
+        return api.post(`${this.authUrl}/refresh`, refreshToken)
     }
 
     static async registerStudent(username, password, rePassword, firstName, lastName, fathersName,

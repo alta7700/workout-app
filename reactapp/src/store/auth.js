@@ -74,4 +74,21 @@ export default class AuthStore {
         this.setIsAuth(false)
         this.setUser(null)
     }
+
+    async checkAuth() {
+        let refreshToken = localStorage.getItem('refreshToken')
+        if (refreshToken) {
+            try {
+                const response = await AuthService.refresh(refreshToken)
+                localStorage.setItem('accessToken', response.data.accessToken)
+                localStorage.setItem('refreshToken', response.data.refreshToken)
+                this.setIsAuth(true)
+                this.setUser(response.data.user)
+            } catch (e) {
+                this.logout()
+            }
+        } else {
+            this.logout()
+        }
+    }
 }

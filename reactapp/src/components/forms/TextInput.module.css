@@ -1,28 +1,74 @@
-.field {
+.container {
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.label {
-    width: 100%;
+    position: relative;
+    font-size: 18px
 }
 
 .input {
-    max-width: 320px;
-    height: 50px;
     width: 100%;
-    border-radius: 8px;
+    padding: 10px 0;
+    border: none;
+    border-bottom: 1px solid #c2c2c2;
+    background-color: transparent;
     outline: none;
+    transition: 0.3s;
 }
-.valid {
-    border-color: green;
+
+.label {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    z-index: -1;
+    color: #4d4d4d;
+    transition: 0.3s;
 }
-.invalid {
-    border-color: red;
+.input:focus {
+    border-bottom: 1px solid #1a73a8;
+}
+.input:focus ~ .label, .input:not(:placeholder-shown) ~ .label {
+    top: 0;
+    font-size: 15px;
+    color: #7f7f7f;
 }
 
 .errors {
-
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
 }
+.errors img {
+    cursor: pointer;
+}
+.dialog {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    transform: translateY(-100%);
+    background-color: rgb(255, 241, 241);
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 5px;
+    font-size: 13px;
+    max-width: 400px;
+}
+.dialog:after {
+    content: "";
+    z-index: 2;
+    position: absolute;
+    bottom: -1px;
+    right: 9px;
+    height: 12px;
+    width: 12px;
+    border-bottom: inherit;
+    border-right: inherit;
+    background-color: inherit;
+    transform: translate(-50%, 50%) rotate(45deg);
+}
+.dialog p {
+    margin: 0;
+    min-width: 220px;
+    max-width: 350px;
+}
+

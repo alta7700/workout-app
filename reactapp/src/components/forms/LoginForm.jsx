@@ -1,46 +1,41 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {useForm} from "react-hook-form";
 import classes from "./LoginForm.module.css";
 import TextInput from "./TextInput";
+import PasswordInput from "./PasswordInput";
+import {Context} from "../../index";
 
 const LoginForm = () => {
 
-    const {register, formState: { errors, dirtyFields }, handleSubmit} = useForm({
+    const {auth} = useContext(Context)
+    const {register, formState: { errors }, handleSubmit} = useForm({
         mode: 'onChange',
-        criteriaMode: "all"
+        criteriaMode: "all",
     })
 
+    const onSubmit = async (data) => {
+        await auth.login(data.username, data.password)
+    }
     return (
         <div className={classes.container}>
             <span className={classes.title}>Авторизация</span>
-            <form className={classes.form_container} onSubmit={handleSubmit((data) => console.log(data))}>
+            <form className={classes.form_container} onSubmit={handleSubmit(onSubmit)}>
                 <TextInput
                     register={register("username", {
                         required: 'Обязательное поле',
                         minLength: {value: 5, message: 'Минимальная длина - 5 символов'},
                     })}
                     errors={errors.username}
-                    dirty={dirtyFields.username}
                     label="Логин"
+                    autoComplete={"username"}
                 />
-                <TextInput
-                    register={register("password",  {
-                        required: 'Обязательное поле',
-                        minLength: {value: 8, message: 'Минимум 8 символов'},
-                        maxLength: {value: 25, message: 'Максимум 25 символов'},
-                        validate: {
-                            digit: v => /(?=.*[0-9])/.test(v) || "Минимум одна цифра",
-                            lower: v => /(?=.*[a-z])/.test(v) || "Нужна одна прописная буква",
-                            upper: v => /(?=.*[A-Z])/.test(v) || "Нужна одна строчная буква",
-                            allowed: v => /^[0-9a-zA-Z!@#$%^&*]{0,}$/.test(v) ||
-                                "Только латинские буквы, цифры и символы !@#$%^&*",
-                        }
-                    })}
+                <PasswordInput
+                    register={register}
                     errors={errors.password}
-                    dirty={dirtyFields.password}
-                    label="Пароль"
+                    name={"password"}
+                    current={true}
                 />
-                <input type='submit' value='Войти'/>
+                <button type='submit' className={classes.submit}>Войти</button>
             </form>
         </div>
     );
