@@ -12,6 +12,9 @@ class Subject(Model):
 
     teachers: fields.BackwardFKRelation["models.TeacherSubject"]
 
+    class Meta:
+        ordering = ('short_title', )
+
 
 class TeacherSubject(Model):
 

@@ -5,12 +5,14 @@ const useFetching = (callback) => {
 
     const {loading} = useContext(Context)
 
-    return async () => {
-        let key = loading.startFetching()
-        await callback()
+    return async (...props) => {
+        let key = loading.startFetching();
+        // const sleep = ms => new Promise(r => setTimeout(r, ms));
+        // await sleep(300)
+        let response = await callback(...props)
         loading.endFetching(key)
+        return response
     }
-
 };
 
 export default useFetching;

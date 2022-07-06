@@ -1,7 +1,6 @@
 import React from 'react';
 
-const BaseForm = (fields) => {
-
+const StudentItem = () => {
     return (
         <div>
 
@@ -9,4 +8,4 @@ const BaseForm = (fields) => {
     );
 };
 
-export default BaseForm;
+export default StudentItem;

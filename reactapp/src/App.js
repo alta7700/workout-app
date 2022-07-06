@@ -1,27 +1,32 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Context} from "./index";
-import LoginForm from "./components/forms/LoginForm";
-import classes from "./App.module.css";
+import "./normalize.css"
+import "./App.css";
 import {observer} from "mobx-react-lite";
 import useFetching from "./hooks/useFetching";
+import Loader from "./components/Loader";
+import Router from "./routers/Router";
+import LoginPage from "./pages/LoginPage";
 
 
 const App = observer(() => {
 
     const {auth, loading} = useContext(Context)
-    const checkAuth = useFetching(auth.checkAuth)
+    const checkAuth = useFetching(async () => {
+        await auth.checkAuth()
+        setAuthChecked(true)
+    })
+    const [authChecked, setAuthChecked] = useState(false)
 
     useEffect(() => {
-        (async () => await checkAuth())()
+        checkAuth()
     }, [])
 
     return (
-        <div className={classes.app}>
-            {loading.state && <h1>Загрузка</h1>}
-            {!auth.isAuth ? <LoginForm/> : Object.entries(auth.user).map(([key, value]) =>
-                <p key={key}>{key}: {value}</p>
-            )}
-        </div>
+        <>
+            {loading.state && <Loader/>}
+            {authChecked && (!auth.isAuth ? <LoginPage/> : <Router user={auth.user}/>)}
+        </>
     );
 });
 

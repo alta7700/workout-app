@@ -1,7 +1,7 @@
 from starlette import status
 
 from auth.config import TokenUser
-from models import TeacherSubject, User, StudentTeachers
+from models import TeacherSubject, User, StudentTeachers, Subject
 from services.users import can_use_ws
 
 
@@ -13,8 +13,16 @@ async def is_students_teacher(teacher_id: int, subject_id: int, student_id: int)
     return await StudentTeachers.exists(teacher_id=teacher_id, subject_id=subject_id, student_id=student_id)
 
 
+async def get_teachers_list() -> list[User]:
+    return await User.filter(is_active=True, is_teacher=True).prefetch_related('subjects')
+
+
 async def get_subject_teachers(subject_id: int) -> list[User]:
-    return await User.filter(subjects__subject_id=subject_id)
+    return await User.filter(is_active=True, is_teacher=True, subjects__subject_id=subject_id)
+
+
+async def get_teacher_subjects(teacher_id: int) -> list[int]:
+    return await TeacherSubject.filter(teacher_id=teacher_id).values_list('subject_id', flat=True)
 
 
 async def bind_teacher_and_students(teacher_id: int, subject_id: int, stud_ids: list[int]) -> None:

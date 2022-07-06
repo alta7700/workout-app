@@ -10,7 +10,7 @@ export default class LoaderStore {
     fetching = []
 
     updateState() {
-        this.state = this.fetching.length === 0
+        this.state = this.fetching.length !== 0
     }
 
     startFetching() {
@@ -20,7 +20,6 @@ export default class LoaderStore {
         return key
     }
     endFetching(key) {
-        console.log('closing')
         this.fetching = this.fetching.filter(v => v !== key)
         this.updateState()
     }

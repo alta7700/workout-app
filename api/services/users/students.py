@@ -1,12 +1,14 @@
 from starlette import status
 
 from auth.config import TokenUser
-from models import User
+from models import User, StudentTeachers
 from schemas import StudentRead, StudHierarchy
 from services.users import can_use_ws
 
 
-async def get_students_list(faculty_id: int = None, course_n: int = None, group_n: int = None) -> list[User]:
+async def get_students_list(
+        faculty_id: int = None, course_n: int = None, group_n: int = None, is_head: bool = None
+) -> list[User]:
     query = User.filter_students()
     if faculty_id:
         query = query.filter(faculty_id=faculty_id)
@@ -14,6 +16,8 @@ async def get_students_list(faculty_id: int = None, course_n: int = None, group_
         query = query.filter(course_n=course_n)
     if group_n:
         query = query.filter(group_n=group_n)
+    if is_head is not None:
+        query = query.filter(is_head=is_head)
     return await query
 
 
@@ -47,3 +51,7 @@ async def can_user_workout(token: str, subject_id: int) -> tuple[bool, int, str,
         code = status.WS_1003_UNSUPPORTED_DATA
         reason = "Недостаточно прав доступа"
     return can, code, reason, student
+
+
+async def get_students_subjects(student_id: int) -> list[int]:
+    return await StudentTeachers.filter(student_id=student_id).values_list('subject_id', flat=True)

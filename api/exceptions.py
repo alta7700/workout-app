@@ -6,10 +6,9 @@ from starlette import status
 
 class UsernameExists(HTTPException):
     def __init__(self,
-                 detail: Any = None,
+                 detail: Any = 'Логин занят',
                  headers: Optional[dict[str, Any]] = None,
                  ) -> None:
-        detail = detail or {'fields': {'username': 'Логин занят'}}
         super().__init__(status_code=status.HTTP_400_BAD_REQUEST, detail=detail, headers=headers)
 
 

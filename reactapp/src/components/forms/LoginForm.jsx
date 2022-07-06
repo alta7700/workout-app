@@ -1,43 +1,34 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {useForm} from "react-hook-form";
-import classes from "./LoginForm.module.css";
-import TextInput from "./TextInput";
-import PasswordInput from "./PasswordInput";
+import PasswordInput from "./base/PasswordInput";
 import {Context} from "../../index";
+import useFetching from "../../hooks/useFetching";
+import UsernameInput from "./base/UsernameInput";
+import BaseForm from "./base/BaseForm";
+import SubmitButton from "./base/SubmitButton";
 
 const LoginForm = () => {
 
     const {auth} = useContext(Context)
-    const {register, formState: { errors }, handleSubmit} = useForm({
+    const {register, resetField, formState: { errors }, handleSubmit} = useForm({
         mode: 'onChange',
         criteriaMode: "all",
     })
+    const [formError, setFormError] = useState('')
+    const onSubmit = useFetching(async (data) => {
+        const [code, info] = await auth.login(data.username, data.password);
+        if (code !== 200) {
+            resetField("password", {keepDirty: false, keepError: false, keepTouched: false})
+            setFormError(info.detail)
+        }
+    })
 
-    const onSubmit = async (data) => {
-        await auth.login(data.username, data.password)
-    }
     return (
-        <div className={classes.container}>
-            <span className={classes.title}>Авторизация</span>
-            <form className={classes.form_container} onSubmit={handleSubmit(onSubmit)}>
-                <TextInput
-                    register={register("username", {
-                        required: 'Обязательное поле',
-                        minLength: {value: 5, message: 'Минимальная длина - 5 символов'},
-                    })}
-                    errors={errors.username}
-                    label="Логин"
-                    autoComplete={"username"}
-                />
-                <PasswordInput
-                    register={register}
-                    errors={errors.password}
-                    name={"password"}
-                    current={true}
-                />
-                <button type='submit' className={classes.submit}>Войти</button>
-            </form>
-        </div>
+        <BaseForm title="Авторизация" formError={formError} onSubmit={handleSubmit(onSubmit)}>
+            <UsernameInput register={register} errors={errors.username}/>
+            <PasswordInput register={register} errors={errors.password} current={true}/>
+            <SubmitButton>Войти</SubmitButton>
+        </BaseForm>
     );
 };
 

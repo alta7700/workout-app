@@ -7,6 +7,8 @@
     width: 100%;
     box-shadow: 0 4px 16px #ccc;
     letter-spacing: 1px;
+    background-color: white;
+    z-index: 1;
 }
 
 .title {
@@ -15,8 +17,15 @@
     font-size: 24px;
     font-weight: 500;
 }
+.error {
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 400;
+    color: red;
+}
 
-.form_container {
+.formContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -25,18 +34,4 @@
     gap: 35px;
     padding: 0 25px 15px;
     box-sizing: border-box;
-}
-
-.submit {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-family: sans-serif;
-    letter-spacing: 1px;
-    font-size: 20px;
-    color :#fff;
-    background-color: #0071f0;
-    outline: none;
-    cursor: pointer;
-    transition: 0.3s;
 }

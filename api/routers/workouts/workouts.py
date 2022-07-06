@@ -38,11 +38,8 @@ async def get_accepted(
 ):
     if not await users_service.is_subject_teacher(teacher_id=teacher.id, subject_id=subject_id):
         raise BadRequest('Нет доступа к этому предмету')
-
-
     accepted_by = accepted_by or teacher.id
     workouts = await workouts_service.get_wo_stud_list(
         accepted_by=accepted_by, subject_id=subject_id, start=date_start, end=date_end, students=True
     )
-
     return [AcceptedWorkOutRead.from_orm(w) for w in workouts]

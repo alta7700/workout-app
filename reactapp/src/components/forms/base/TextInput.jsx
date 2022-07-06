@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import classes from "./TextInput.module.css";
-import errorSvg from "./error.svg"
-import successSvg from "./success.svg"
+import classes from "./Fields.module.css";
+import errorSvg from "./svg/error.svg"
+import successSvg from "./svg/success.svg"
 
 const TextInput = ({ register, errors, label, children, ...props}) => {
 

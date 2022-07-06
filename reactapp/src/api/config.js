@@ -23,3 +23,15 @@ api.interceptors.request.use((config) => {
 
 
 export default api
+
+
+export function urlWithQ(url, q) {
+    if (q) {
+        let qStr = '?'
+        Object.entries(q).map(([key, value]) =>
+            qStr = `${qStr}${key}=${value}&`
+        )
+        return url + qStr.slice(0, qStr.length - 1)
+    }
+    return url
+}

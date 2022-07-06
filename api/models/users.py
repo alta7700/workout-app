@@ -27,12 +27,12 @@ class User(Model):
     group_n: int = fields.SmallIntField(null=True)
     is_head: bool = fields.BooleanField(null=True)
 
-    workouts: fields.BackwardFKRelation["models.WorkOut"]
-    accepted_workouts: fields.BackwardFKRelation["models.WorkOut"]
+    workouts: fields.ReverseRelation["models.WorkOut"]
+    accepted_workouts: fields.ReverseRelation["models.WorkOut"]
 
-    subjects: fields.BackwardFKRelation["models.TeacherSubject"]
-    teachers: fields.BackwardFKRelation["models.StudentTeachers"]
-    students: fields.BackwardFKRelation["models.StudentTeachers"]
+    subjects: fields.ReverseRelation["models.TeacherSubject"]
+    teachers: fields.ReverseRelation["models.StudentTeachers"]
+    students: fields.ReverseRelation["models.StudentTeachers"]
 
     last_login: datetime = fields.DatetimeField(null=True)
     joined_at: datetime = fields.DatetimeField(auto_now_add=True)

@@ -6,9 +6,14 @@ from exceptions import UsernameExists, BadRequest
 from models import User
 from services import users as users_service
 from dependencies import auth as auth_deps
-from schemas import TeacherCreate, TSBindCreate, StudHierarchy
+from schemas import TeacherCreate, TSBindCreate, StudHierarchy, TeacherWithSubjectIds
 
 teachers_router = APIRouter()
+
+
+@teachers_router.get('/', response_model=list[TeacherWithSubjectIds])
+async def get_teachers(admin: User = Depends(auth_deps.get_admin, use_cache=False)):
+    return [TeacherWithSubjectIds.from_orm(x) for x in await users_service.get_teachers_list()]
 
 
 @teachers_router.post('/create', status_code=status.HTTP_201_CREATED)
@@ -36,3 +41,5 @@ async def bind_teacher_and_students(
     )
     students_list = await users_service.get_teacher_students(subject_id=data.subject_id, teacher_id=data.teacher_id)
     return users_service.get_students_tree(students_list)
+
+

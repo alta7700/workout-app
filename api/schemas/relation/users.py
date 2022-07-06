@@ -1,3 +1,8 @@
+from typing import Optional
+
+from pydantic import root_validator, validator
+from tortoise.fields import ReverseRelation
+
 from schemas import CamelModel, TeacherRead, StudentRead
 
 
@@ -15,3 +20,12 @@ class TSBindRead(CamelModel):
     teacher: TeacherRead
     students: StudHierarchy
 
+
+class TeacherWithSubjectIds(TeacherRead):
+    subjects: Optional[list]
+
+    @validator('subjects', pre=True)
+    def translate_subjects_to_list_int(cls, v):
+        if isinstance(v, ReverseRelation):
+            v = [x.subject_id for x in v.related_objects]
+        return v

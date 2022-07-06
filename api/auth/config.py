@@ -1,6 +1,5 @@
 from datetime import timedelta
 from enum import Enum
-from typing import Optional
 
 from jose.constants import ALGORITHMS
 from passlib.context import CryptContext

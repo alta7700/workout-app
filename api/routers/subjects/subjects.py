@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, Body
+from starlette import status
 from tortoise.exceptions import IntegrityError
 
 from auth.config import TokenUser
@@ -12,18 +13,17 @@ from services import users as users_service
 subjects_router = APIRouter()
 
 
-@subjects_router.post('/create', response_model=SubjectRead)
-async def create(data: SubjectCreate, admin: User = Depends(auth_deps.get_admin, use_cache=False)):
-    try:
-        subject = await subjects_service.create_subject(data=data)
-    except IntegrityError:
-        raise BadRequest('Предмет уже создан')
-    return SubjectRead.from_orm(subject)
-
-
 @subjects_router.get('/', response_model=list[SubjectRead])
 async def get_all(user: User = Depends(auth_deps.get_auth, use_cache=False)):
     return [SubjectRead.from_orm(s) for s in await subjects_service.get_subjects_list()]
+
+
+@subjects_router.post('/create', status_code=status.HTTP_201_CREATED)
+async def create(data: SubjectCreate, admin: User = Depends(auth_deps.get_admin, use_cache=False)):
+    try:
+        await subjects_service.create_subject(data=data)
+    except IntegrityError:
+        raise BadRequest('Предмет уже создан')
 
 
 @subjects_router.get('/{subject_id}/teachers', response_model=list[TeacherRead])
@@ -40,4 +40,3 @@ async def create(
     await subjects_service.add_teachers(subject_id=subject_id, teacher_ids=teacher_ids)
     teachers = await users_service.get_subject_teachers(subject_id=subject_id)
     return [TeacherRead.from_orm(t) for t in teachers]
-

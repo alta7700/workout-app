@@ -1,0 +1,35 @@
+.nav {
+    width: 100%;
+    min-height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    gap: 35px;
+}
+
+.navLink {
+    color: white;
+    font-size: 24px;
+    text-decoration: none;text-align: center;
+}
+.navLink.active {
+    color: #939393 !important;
+}
+
+.content {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+}
+@media (min-width: 600px) {
+    .content {
+        box-sizing: border-box;
+        padding: 0 10px
+    }
+}

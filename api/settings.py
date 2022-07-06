@@ -32,7 +32,7 @@ class UserSettings:
     MAX_FIRST_NAME_LEN = 50
     MAX_LAST_NAME_LEN = 50
     MAX_FATHERS_NAME_LEN = 50
-    MAX_USERNAME_NAME_LEN = 50
+    MAX_USERNAME_NAME_LEN = 25
 
 
 class SubjectSettings:

@@ -25,43 +25,66 @@ export default class AuthStore {
             localStorage.setItem('refreshToken', response.data.refreshToken)
             this.setIsAuth(true)
             this.setUser(response.data.user)
-            return [response.code, {}]
+            return [response.status, {}]
         } catch (e) {
             const response = e.response
             if (response) {
-                return [response.code, response.data]
+                return [response.status, response.data]
             } else {
                 return [499, 'Проблема с сетью']
             }
         }
+    }
+
+    async refresh() {
+        let refreshToken = localStorage.getItem('refreshToken')
+        if (refreshToken) {
+            try {
+                const response = await AuthService.refresh(refreshToken)
+                localStorage.setItem('accessToken', response.data.accessToken)
+                localStorage.setItem('refreshToken', response.data.refreshToken)
+                this.setIsAuth(true)
+                this.setUser(response.data.user)
+            } catch (e) {
+                if (e.response) {
+                    this.logout()
+                } else {
+                    alert('Проблемы с сетью, попробуйте обновить страницу')
+                }
+            }
+        }
+    }
+
+    async checkAuth() {
+        await this.refresh()
     }
 
     async registerStudent(username, password, rePassword, firstName, lastName, fathersName,
-                                 facultyId, courseN, groupN) {
+                          facultyId, courseN, groupN
+    ) {
         try {
             const response = await AuthService.registerStudent(username, password, rePassword,
                 firstName, lastName, fathersName, facultyId, courseN, groupN)
-            return [response.code, {}]
+            return [response.status, {}]
         } catch (e) {
             const response = e.response
             if (response) {
-                return [response.code, response.data]
+                return [response.status, response.data]
             } else {
                 return [499, 'Проблема с сетью']
             }
         }
     }
 
-    async registerTeacher(username, password, rePassword, firstName, lastName, fathersName,
-                                 ) {
+    async registerTeacher(username, password, rePassword, firstName, lastName, fathersName) {
         try {
             const response = await AuthService.registerTeacher(username, password, rePassword,
                 firstName, lastName, fathersName)
-            return [response.code, {}]
+            return [response.status, {}]
         } catch (e) {
             const response = e.response
             if (response) {
-                return [response.code, response.data]
+                return [response.status, response.data]
             } else {
                 return [499, 'Проблема с сетью']
             }
@@ -73,22 +96,5 @@ export default class AuthStore {
         localStorage.removeItem('refreshToken')
         this.setIsAuth(false)
         this.setUser(null)
-    }
-
-    async checkAuth() {
-        let refreshToken = localStorage.getItem('refreshToken')
-        if (refreshToken) {
-            try {
-                const response = await AuthService.refresh(refreshToken)
-                localStorage.setItem('accessToken', response.data.accessToken)
-                localStorage.setItem('refreshToken', response.data.refreshToken)
-                this.setIsAuth(true)
-                this.setUser(response.data.user)
-            } catch (e) {
-                this.logout()
-            }
-        } else {
-            this.logout()
-        }
     }
 }
