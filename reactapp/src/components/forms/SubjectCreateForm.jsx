@@ -7,7 +7,7 @@ import TextInput from "./base/TextInput";
 import SubmitButton from "./base/SubmitButton";
 import SubjectsService from "../../api/subjects";
 
-const SubjectCreateForm = ({visible, setVisible}) => {
+const SubjectCreateForm = () => {
 
     const {subjects} = useContext(Context)
     const {register, reset, formState: { errors }, handleSubmit} = useForm({
@@ -19,18 +19,15 @@ const SubjectCreateForm = ({visible, setVisible}) => {
         let [status, info] = await SubjectsService.create(data.title, data.shortTitle)
         if (status === 201) {
             await subjects.update()
-            setVisible(false)
         } else if (status === 400) {
             setFormError(info.detail)
         }
     })
 
-    useEffect(() => { visible && reset() }, [visible])
-
     return (
         <BaseForm title="Добавить предмет" formError={formError} onSubmit={handleSubmit(onSubmit)}>
-            <TextInput register={register("title")} label="Название" errors={errors.title}/>
-            <TextInput register={register("shortTitle")} label="Аббревиатура" errors={errors.shortTitle}/>
+            <TextInput register={register} name="title" label="Название" errors={errors.title}/>
+            <TextInput register={register} name="shortTitle" label="Аббревиатура" errors={errors.shortTitle}/>
             <SubmitButton>Создать</SubmitButton>
         </BaseForm>
     );

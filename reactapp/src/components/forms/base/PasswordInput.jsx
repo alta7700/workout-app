@@ -23,7 +23,9 @@ const PasswordInput = ({register, errors, label, current, re, getValues, ...prop
 
     return (
         <TextInput
-            register={register(re ? 'rePassword' : 'password', {required: 'Обязательное поле', ...options})}
+            register={register}
+            name={re ? "rePassword" : "password"}
+            opts={{required: "Обязательное поле", ...options}}
             errors={errors}
             label={label || "Пароль"}
             type={visible ? "text" : "password"}

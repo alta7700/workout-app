@@ -1,12 +1,36 @@
-import React from 'react';
+import React, {useContext, useState} from 'react';
 import SubjectCreateForm from "../../components/forms/SubjectCreateForm";
-import SubjectList from "../../components/adminLists/subjects/SubjectList";
-import BaseListPage from "./base/BaseListPage";
+import {Context} from "../../index";
+import ActionBar from "../../components/actions/ActionBar";
+import ItemList from "../../components/ItemList";
+import useEffectFetching from "../../hooks/useEffectFetching";
 
 const SubjectsPage = () => {
 
+    const { subjects } = useContext(Context)
+    const [search, setSearch] = useState("")
+
+    useEffectFetching(async () => {
+        await subjects.check()
+    }, [])
+
+
+    const fields = {
+        id: {title: "ID"},
+        title: {title: "Название"},
+        shortTitle: {title: "Сокращение"}
+    }
+
+    const actions = {
+        create: {name: "Создать", component: <SubjectCreateForm/>},
+    }
+
     return (
-        <BaseListPage List={SubjectList} CreateForm={SubjectCreateForm}/>
+        <>
+            <ActionBar search={{value: search, set: setSearch}} actions={actions}/>
+            <ItemList itemList={subjects.search(search)} fields={fields}/>
+        </>
+
     );
 };
 

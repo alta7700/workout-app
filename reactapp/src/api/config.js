@@ -33,5 +33,5 @@ export function urlWithQ(url, q) {
         )
         return url + qStr.slice(0, qStr.length - 1)
     }
-    return url
+    return `${url}/`
 }

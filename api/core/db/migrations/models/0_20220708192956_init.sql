@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS "user" (
     "first_name" VARCHAR(50) NOT NULL,
     "last_name" VARCHAR(50) NOT NULL,
     "fathers_name" VARCHAR(50) NOT NULL,
-    "username" VARCHAR(50) NOT NULL UNIQUE,
+    "username" VARCHAR(25) NOT NULL UNIQUE,
     "hashed_password" VARCHAR(200) NOT NULL,
     "password_change_dt" TIMESTAMPTZ NOT NULL,
     "is_active" BOOL NOT NULL  DEFAULT True,
@@ -32,7 +32,8 @@ CREATE TABLE IF NOT EXISTS "studentteachers" (
     "id" SERIAL NOT NULL PRIMARY KEY,
     "student_id" INT NOT NULL REFERENCES "user" ("id") ON DELETE CASCADE,
     "subject_id" SMALLINT NOT NULL REFERENCES "subject" ("id") ON DELETE CASCADE,
-    "teacher_id" INT NOT NULL REFERENCES "user" ("id") ON DELETE CASCADE
+    "teacher_id" INT NOT NULL REFERENCES "user" ("id") ON DELETE CASCADE,
+    CONSTRAINT "uid_studentteac_student_b69fbc" UNIQUE ("student_id", "subject_id")
 );
 CREATE TABLE IF NOT EXISTS "teachersubject" (
     "id" SERIAL NOT NULL PRIMARY KEY,
@@ -42,6 +43,8 @@ CREATE TABLE IF NOT EXISTS "teachersubject" (
 );
 CREATE TABLE IF NOT EXISTS "workout" (
     "id" SMALLSERIAL NOT NULL PRIMARY KEY,
+    "random_key" VARCHAR(50) NOT NULL,
+    "comment" VARCHAR(200) NOT NULL,
     "created_at" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
     "student_id" INT NOT NULL REFERENCES "user" ("id") ON DELETE CASCADE,
     "subject_id" SMALLINT NOT NULL REFERENCES "subject" ("id") ON DELETE CASCADE,

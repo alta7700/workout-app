@@ -7,19 +7,18 @@ import useFetching from "./hooks/useFetching";
 import Loader from "./components/Loader";
 import Router from "./routers/Router";
 import LoginPage from "./pages/LoginPage";
+import useEffectFetching from "./hooks/useEffectFetching";
 
 
 const App = observer(() => {
 
     const {auth, loading} = useContext(Context)
-    const checkAuth = useFetching(async () => {
-        await auth.checkAuth()
-        setAuthChecked(true)
-    })
+
     const [authChecked, setAuthChecked] = useState(false)
 
-    useEffect(() => {
-        checkAuth()
+    useEffectFetching(async () => {
+        await auth.checkAuth()
+        setAuthChecked(true)
     }, [])
 
     return (

@@ -26,6 +26,21 @@ export default class TeachersStore {
         return false
     }
 
+    search(value) {
+        let filtered = [...this.list]
+        if (value) {
+            value.toLowerCase().split(" ").map(frag =>
+                filtered = filtered.filter(t =>
+                    t.lastName.toLowerCase().startsWith(frag) ||
+                    t.firstName.toLowerCase().startsWith(frag) ||
+                    t.fathersName.toLowerCase().startsWith(frag) ||
+                    t.username.toLowerCase().includes(frag)
+                )
+            )
+        }
+        return filtered
+    }
+
     subjectTeachers(subjId) {
         return this.list.map(v => subjId in v.subjects)
     }

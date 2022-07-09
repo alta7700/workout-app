@@ -34,4 +34,17 @@ export default class SubjectsStore {
         return false
     }
 
+    search(value) {
+        let filtered = [...this.list]
+        if (value) {
+            value.toLowerCase().split(" ").map(frag =>
+                filtered = filtered.filter(s =>
+                    s.title.toLowerCase().includes(frag) ||
+                    s.shortTitle.toLowerCase().includes(frag)
+                )
+            )
+        }
+        return filtered
+    }
+
 }

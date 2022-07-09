@@ -7,6 +7,7 @@ import {BrowserRouter} from "react-router-dom";
 import FacultiesStore from "./store/faculties";
 import SubjectsStore from "./store/subjects";
 import TeachersStore from "./store/teachers";
+import StudentsStore from "./store/students";
 
 
 const auth = new AuthStore()
@@ -14,7 +15,7 @@ const loading = new LoaderStore()
 const faculties = new FacultiesStore()
 const subjects = new SubjectsStore()
 const teachers = new TeachersStore()
-const students = new SubjectsStore()
+const students = new StudentsStore()
 
 
 export const Context = createContext({

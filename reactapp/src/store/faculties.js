@@ -7,27 +7,39 @@ export default class FacultiesStore {
         makeAutoObservable(this)
     }
 
-    faculties = []
+    list = []
     fetched = false
 
-    async get(id) {
+    async check() {
         if (!this.fetched) {
             this.fetched = await this.load()
-        }
-        if (id) {
-            return this.faculties.filter(value => value.id === id)[0]
-        } else {
-            return this.faculties
         }
     }
 
     async load() {
         let [status, list] = await getFaculties()
         if (status === 200) {
-            this.faculties = list
+            this.list = list
             return true
         }
         alert('Не удалось загрузить факультеты')
         return false
     }
+
+    get(id) {
+        if (id) {
+            return this.list.filter(value => value.id === id)[0]
+        } else {
+            return this.list
+        }
+    }
+
+    toSelector() {
+        const opts = []
+        this.list.map(faculty =>
+            opts.push({value: faculty.id, title: faculty.title})
+        )
+        return opts
+    }
+
 }
