@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react';
 import {Context} from "../../index";
-import ItemList from "../../components/ItemList";
+import ItemList from "../../components/tables/table/ItemList";
 import TeacherCreateForm from "../../components/forms/TeacherCreateForm";
 import ActionBar from "../../components/actions/ActionBar";
 import useEffectFetching from "../../hooks/useEffectFetching";

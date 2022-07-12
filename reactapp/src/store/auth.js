@@ -27,6 +27,7 @@ export default class AuthStore {
             this.setUser(response.data.user)
             return [response.status, {}]
         } catch (e) {
+            console.log(e)
             const response = e.response
             if (response) {
                 return [response.status, response.data]

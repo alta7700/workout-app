@@ -2,7 +2,7 @@ import React, {useContext, useState} from 'react';
 import SubjectCreateForm from "../../components/forms/SubjectCreateForm";
 import {Context} from "../../index";
 import ActionBar from "../../components/actions/ActionBar";
-import ItemList from "../../components/ItemList";
+import ItemList from "../../components/tables/table/ItemList";
 import useEffectFetching from "../../hooks/useEffectFetching";
 
 const SubjectsPage = () => {

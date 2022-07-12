@@ -19,7 +19,7 @@
     font-weight: bold;
     text-align: left;
     border: none;
-    padding: 10px 15px;
+    padding: 10px 10px;
     background: #d8d8d8;
     font-size: 14px;
 }
@@ -35,7 +35,7 @@
 .table tbody td {
     text-align: left;
     border: none;
-    padding: 10px 15px;
+    padding: 10px 10px;
     font-size: 14px;
     vertical-align: top;
 }
@@ -126,7 +126,34 @@
     cursor: pointer;
     padding-left: 15px;
 }
-.filter li.selected, .filter li:hover{
+.filter li.filterSelected, .filter li:hover{
     padding-left: 10px;
     border-left: 5px rgba(80, 80, 80, 0.36) solid
 }
+
+.pages {
+    display: flex;
+    align-self: flex-start;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+}
+
+.page {
+    cursor: pointer;
+    user-select: none;
+    display: inline;
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+.page.active {
+    background-color: #4CAF50;
+    color: white;
+}
+.sep {
+    cursor: auto;
+    vertical-align: text-bottom;
+}
+.page:hover:not(.active, .sep) {background-color: #ddd;}

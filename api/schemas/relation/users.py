@@ -29,3 +29,15 @@ class TeacherWithSubjectIds(TeacherRead):
         if isinstance(v, ReverseRelation):
             v = [x.subject_id for x in v.related_objects]
         return v
+
+
+class StudentsAvailableFilters(CamelModel):
+    faculty_id: list[int]
+    course_n: list[int]
+    is_head: list[bool]
+
+
+class StudentTableData(CamelModel):
+    students: list[StudentRead]
+    count: int
+    filters: StudentsAvailableFilters
